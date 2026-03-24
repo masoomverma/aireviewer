@@ -14,10 +14,48 @@
   "contributes": {
     "commands": [
       {
-        "command": "aireviewer.helloWorld",
-        "title": "Hello World"
+        "command": "aireviewer.analyzeError",
+        "title": "AiReviewer: Analyze Error"
+      },
+      {
+        "command": "aireviewer.viewReports",
+        "title": "AiReviewer: View Reports"
+      },
+      {
+        "command": "aireviewer.checkRemote",
+        "title": "AiReviewer: Check Remote Changes"
+      },
+      {
+        "command": "aireviewer.checkPush",
+        "title": "AiReviewer: Check Push Safety"
+      },
+      {
+        "command": "aireviewer.fetchChanges",
+        "title": "AiReviewer: Fetch Changes"
+      },
+      {
+        "command": "aireviewer.pullChanges",
+        "title": "AiReviewer: Pull Changes"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "aireviewer-sidebar",
+          "title": "AiReviewer",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "aireviewer-sidebar": [
+        {
+          "type": "webview",
+          "id": "aireviewer.sidebar",
+          "name": "Chat"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -28,18 +66,20 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.110.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
-    "typescript-eslint": "^8.56.1",
+    "@types/vscode": "^1.110.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
     "eslint": "^9.39.3",
     "typescript": "^5.9.3",
-    "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2"
+    "typescript-eslint": "^8.56.1"
   },
-
   "overrides": {
     "diff": "^8.0.2",
     "serialize-javascript": "^7.0.3"
+  },
+  "dependencies": {
+    "axios": "^1.13.6"
   }
 }

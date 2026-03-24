@@ -1,26 +1,31 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { runAnalyzeError } from './commands/analyzeError';
+import { runViewReports } from './commands/viewReports';
+import { runCheckRemote } from './commands/checkRemote';
+import { runCheckPush } from './commands/checkPush';
+import { runFetchChanges } from './commands/fetchChanges';
+import { runPullChanges } from './commands/pullChanges';
+import { SidebarProvider } from './panels/SidebarProvider';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+    console.log('AiReviewer extension is now active!');
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "aireviewer" is now active!');
+    const sidebarProvider = new SidebarProvider(context.extensionUri);
+    const sidebarSub = vscode.window.registerWebviewViewProvider('aireviewer.sidebar', sidebarProvider);
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('aireviewer.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from AiReviewer!');
-	});
+    const analyzeSub = vscode.commands.registerCommand('aireviewer.analyzeError', () => runAnalyzeError(context));
+    const reportSub = vscode.commands.registerCommand('aireviewer.viewReports', () => runViewReports(context));
+    const remoteSub = vscode.commands.registerCommand('aireviewer.checkRemote', () => runCheckRemote(context));
+    const pushSub = vscode.commands.registerCommand('aireviewer.checkPush', () => runCheckPush(context));
+    const fetchSub = vscode.commands.registerCommand('aireviewer.fetchChanges', () => runFetchChanges(context));
+    const pullSub = vscode.commands.registerCommand('aireviewer.pullChanges', () => runPullChanges(context));
 
-	context.subscriptions.push(disposable);
+    const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+    statusBarItem.text = '$(eye) AiReviewer Ready';
+    statusBarItem.tooltip = 'AiReviewer is active and monitoring';
+    statusBarItem.show();
+
+    context.subscriptions.push(analyzeSub, reportSub, remoteSub, pushSub, fetchSub, pullSub, sidebarSub, statusBarItem);
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {}
