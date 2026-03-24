@@ -1,71 +1,74 @@
-# aireviewer README
+# AiReviewer
 
-This is the README for your extension "aireviewer". After writing up a brief description, we recommend including the following sections.
+AiReviewer is an AI-powered code intelligence and root cause analysis tool designed to enhance your development workflow directly from VS Code. It provides real-time intelligent analysis of errors, source control operations, and codebase health.
 
-## Features
+The project is structured into two main components:
+1. **VS Code Extension** (`extension/`): Provides the user interface, custom commands, and editor integrations.
+2. **Node.js Backend Server** (`backend/`): Handles AI interactions, complex Git operations, and GitHub API interactions.
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+## Features Currently Developed
 
-For example if there is an image subfolder under your extension project workspace:
+### 1. AI-Powered Analysis
+- **Analyze Error**: Send code snippets or terminal errors to the AI for analysis and get insights into root causes and potential fixes.
+- **Interactive Chat Interface**: A built-in Webview panel and Sidebar provider for interacting with the AI Reviewer.
 
-\!\[feature X\]\(images/feature-x.png\)
+### 2. Intelligent Git & Source Control Operations
+- **Check Push Safety**: Evaluates local commits against the remote before you push, identifying potential conflicts or bad patterns.
+- **Check Remote Changes**: Analyzes remote branches and commits directly inside the editor.
+- **Fetch & Pull Changes**: Custom wrapper around Git fetch/pull commands with intelligent pre-flight checks.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+### 3. Monitoring & Reporting
+- **View Reports**: Review logged analysis results, error history, and scanned commits directly in the editor.
+- **Status Bar Integration**: Constant monitoring visibility with a visual `$(eye) AiReviewer Ready` indicator.
+- **Local Analytics Backend**: The local Express server tracks errors, history, and commits to persistent JSON logs (`errors.json`, `commits.json`, `history.json`).
 
-## Requirements
+## Project Structure
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+```text
+aireviewer/
+├── backend/                   # Express.js backend for heavy lifting & AI requests
+│   ├── controllers/           # Route logic (analyze, GitHub, remote, reports)
+│   ├── routes/                # API route definitions
+│   ├── services/              # Integrations (aiService, gitService, githubService)
+│   ├── logs/                  # Local JSON data stores for reports and history
+│   └── server.js              # Entry point (runs on port 3000)
+│
+└── extension/                 # VS Code Extension frontend
+    ├── src/
+    │   ├── commands/          # Implementations for editor commands
+    │   ├── panels/            # Webview UI and Sidebar Chat implementation
+    │   ├── services/          # API Client to communicate with backend
+    │   ├── utils/             # Local logging and utilities
+    │   └── extension.ts       # Extension activation module
+    └── package.json           # Extension manifest (defines commands & views)
+```
 
-## Extension Settings
+## Getting Started
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+### Running the Backend Server
+```bash
+cd backend
+npm install
+node server.js
+```
+*The server will start on `http://localhost:3000`.*
 
-For example:
+### Running the VS Code Extension
+1. Open the `/extension` directory in VS Code.
+2. Run `npm install` to install extension dependencies.
+3. Press `F5` to open a new Extension Development Host window.
+4. Interact with the extension through the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`), typing `AiReviewer:`.
 
-This extension contributes the following settings:
+## Available Commands
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+- `AiReviewer: Analyze Error` (`aireviewer.analyzeError`)
+- `AiReviewer: View Reports` (`aireviewer.viewReports`)
+- `AiReviewer: Check Remote Changes` (`aireviewer.checkRemote`)
+- `AiReviewer: Check Push Safety` (`aireviewer.checkPush`)
+- `AiReviewer: Fetch Changes` (`aireviewer.fetchChanges`)
+- `AiReviewer: Pull Changes` (`aireviewer.pullChanges`)
 
-## Known Issues
+## Development
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+- **Extension**: Built with TypeScript and the standard VS Code Extension API.
+- **Backend**: Built with Node.js and Express. It uses different services to interface with the local git repository and AI language models.
